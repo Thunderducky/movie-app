@@ -1,23 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import Search from './components/Search';
+import Results from "./components/Results";
 import './App.css';
+import API from './utils/API';
 
 function App() {
+  const [search, setSearch] = useState("Planet of the Apes");
+  const [results, setResults] = useState([])
+
+  function searchMovies(){
+    API.getMovies(search).then(searchResults => setResults(searchResults.Search || []));
+  }
+
+  // ComponentDidMount ComponentDidUpdate
+  useEffect(() => {
+    searchMovies()
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div>
+          <Search label="movie" search={search} setSearch={setSearch} searchMovies={searchMovies}/>
+          <Results results={results} />
+        </div>
       </header>
     </div>
   );
